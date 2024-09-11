@@ -115,7 +115,41 @@
             let recommendProducts = getProductsByCategorey(recommendCategory);
 
             recommendations.innerHTML = '<h3>Doporučené produkty:</h3>';
+
+            recommendedProducts.forEach(product => {
+                const productDiv = document.createElement('div');
+                productDiv.className = 'product';
+                productDiv.innerHTML = `
+                <img src="${product.image}" alt ="${product}">
+                <h3>${product.name}</h3>
+                <p>Cena: ${product.price} KČ</p>
+                `;
+                recommendations.appendChild(productDiv);
+    
+            });
         }
+
+        function  getMostViewedCategory() {
+            let maxViews = 0;
+            let mostViewedCategory = '';
+            for (let category in viewedCategories){
+                if (viewedCategories[category] > maxViews){
+                    maxViews = viewedCategories[category];
+                    mostViewedCategory = category;
+            }
+        }
+        return mostViewedCategory;
+    }
+
+    function getProductsByCategorey(category){
+        const allProducts = [
+            { name: 'Product 1', price: 50, category: 'psací potřeby', image: "https://img.mcpenshop.cz/images/mcpen/produkty/32100002.jpg?vid=1&tid=30&r=D"},
+            { name: 'product 2', price: '', category: '', image: ""},
+            { name: 'product 2', price: '', category: '', image: ""},
+        ];
+
+        return allProducts.filter(product => product.category === category);
+    }
     </script>
 </body>
 </html>
