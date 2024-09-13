@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="cs">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Testovací E-shop</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -69,87 +69,50 @@
         <div class="product">
             <img src="https://img.mcpenshop.cz/images/mcpen/produkty/32100002.jpg?vid=1&tid=30&r=D" alt="Produkt 1">
             <h3>Produkt 1</h3>
-            <p>cena: 62,90 kč</p>
-            <button onclick ="addtocart('Produkt 1', 62,90)">Přidat do košíku</button>
+            <p>cena: 62.90 Kč</p>
+            <button onclick="addtocart('Produkt 1', 62.90, 'https://img.mcpenshop.cz/images/mcpen/produkty/32100002.jpg?vid=1&tid=30&r=D')">Přidat do košíku</button>
         </div>
 
         <div class="product">
             <img src="https://img.mcpenshop.cz/images/mcpen/produkty/18100130.jpg?vid=1&tid=30&r=D" alt="Produkt 2">
             <h3>Produkt 2</h3>
-            <p>cena: 35,90 kč</p>
-            <button onclick ="addtocart('Produkt 2', 62,90)">Přidat do košíku</button>
+            <p>cena: 35.90 Kč</p>
+            <button onclick="addtocart('Produkt 2', 35.90, 'https://img.mcpenshop.cz/images/mcpen/produkty/18100130.jpg?vid=1&tid=30&r=D')">Přidat do košíku</button>
         </div>
+
         <div class="product">
             <img src="https://img.mcpenshop.cz/images/mcpen/produkty/36900001.jpg?vid=1&tid=30&r=D" alt="Produkt 3">
             <h3>Produkt 3</h3>
-            <p>cena:71,90 kč</p>
-            <button onclick ="addtocart('Produkt 3', 62,90)">Přidat do košíku</button>
+            <p>cena: 71.90 Kč</p>
+            <button onclick="addtocart('Produkt 3', 71.90, 'https://img.mcpenshop.cz/images/mcpen/produkty/36900001.jpg?vid=1&tid=30&r=D')">Přidat do košíku</button>
         </div>
     </div>
 
+    <div class="cart" id="cart-icon" onclick="redirectToCart()">
+        🛒 0 <span id="cart-count">0</span>
+    </div>
+
     <script>
-        let cart = []
-        let viewedCategories = {}
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-        function addtocart(product, price, category) {
-            cart.push({ product, price, category});
-            updateCart();
-            trackCategory(category);
-            recommendProducts();
-        }
-        function updateCart(){
-            document.getElementById('cart').textContent = `🛒 ${cart.length}`;
-        }
+      function addtocart(product, price, image) {
+        console.log('Přidáváme produkt:', product, 'cena', price)
+        cart.push({ product, price, image });
+        localStorage.setItem('cart', JSON.stringify(cart));
+        console.log('Košík po přidání:', cart);
+        updateCart();
+      }
 
-        function trackCategory(category){
-            if (viewedCategories[category]){
-                viewedCategories[category] ++;
-            } else {
-                viewedCategories[category] = 1;
-            }
-        }
+      function updateCart() {
+        const cartCount = document.getElementById('cart-count');
+        console.log('Počet položek v košíku:', cart.length);
+      }
 
-        function recommendProducts() {
-            const recommendations = document.getElementById('reconmendations');
-            let recommendCategory = getMostViewedCategory();
-            let recommendProducts = getProductsByCategorey(recommendCategory);
+      function redirectToCart() {
+        window.location.href = 'cart.html';
+      }
 
-            recommendations.innerHTML = '<h3>Doporučené produkty:</h3>';
-
-            recommendedProducts.forEach(product => {
-                const productDiv = document.createElement('div');
-                productDiv.className = 'product';
-                productDiv.innerHTML = `
-                <img src="${product.image}" alt ="${product}">
-                <h3>${product.name}</h3>
-                <p>Cena: ${product.price} KČ</p>
-                `;
-                recommendations.appendChild(productDiv);
-    
-            });
-        }
-
-        function  getMostViewedCategory() {
-            let maxViews = 0;
-            let mostViewedCategory = '';
-            for (let category in viewedCategories){
-                if (viewedCategories[category] > maxViews){
-                    maxViews = viewedCategories[category];
-                    mostViewedCategory = category;
-            }
-        }
-        return mostViewedCategory;
-    }
-
-    function getProductsByCategorey(category){
-        const allProducts = [
-            { name: 'Product 1', price: 50, category: 'psací potřeby', image: "https://img.mcpenshop.cz/images/mcpen/produkty/32100002.jpg?vid=1&tid=30&r=D"},
-            { name: 'product 2', price: '', category: '', image: ""},
-            { name: 'product 2', price: '', category: '', image: ""},
-        ];
-
-        return allProducts.filter(product => product.category === category);
-    }
+      document.addEventListener('DOMContentLoaded', updateCart)
     </script>
 </body>
 </html>
